@@ -2,12 +2,14 @@ package praktikum;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseTest {
     @Test
+    @DisplayName("В каталоге есть три вида булочек, соусы и начинки")
     void catalogOffersBunsAndBothIngredientTypes() {
         Database database = new Database();
 
