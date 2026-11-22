@@ -1,6 +1,7 @@
 package praktikum;
 
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,6 +14,7 @@ class BurgerTest {
     private final Ingredient mustard = new Ingredient(IngredientType.SAUCE, "mustard", 2f);
 
     @Test
+    @DisplayName("В цену входят обе половины булочки и все ингредиенты")
     void priceIncludesBothBunHalvesAndEachIngredient() {
         Bun bun = mock(Bun.class);
         when(bun.getPrice()).thenReturn(10f);
@@ -24,6 +26,7 @@ class BurgerTest {
     }
 
     @Test
+    @DisplayName("Удаление по индексу сохраняет остальные ингредиенты")
     void removingIngredientAtIndexKeepsOtherIngredients() {
         burger.addIngredient(cheese);
         burger.addIngredient(mustard);
@@ -34,6 +37,7 @@ class BurgerTest {
     }
 
     @Test
+    @DisplayName("При переносе ингредиента остальные сохраняют порядок")
     void movingIngredientPreservesRelativeOrderOfOthers() {
         Ingredient onion = new Ingredient(IngredientType.FILLING, "onion", 1f);
         burger.addIngredient(cheese);
@@ -46,6 +50,7 @@ class BurgerTest {
     }
 
     @Test
+    @DisplayName("В чеке указаны булочка, ингредиенты по порядку и итоговая цена")
     void receiptListsBunIngredientsInOrderAndTotalPrice() {
         burger.setBuns(new Bun("sesame", 4f));
         burger.addIngredient(mustard);
