@@ -10,14 +10,16 @@ import static org.mockito.Mockito.when;
 
 class BurgerTest {
     private final Burger burger = new Burger();
-    private final Ingredient cheese = new Ingredient(IngredientType.FILLING, "cheese", 3.5f);
-    private final Ingredient mustard = new Ingredient(IngredientType.SAUCE, "mustard", 2f);
+    private final Ingredient cheese = mock(Ingredient.class);
+    private final Ingredient mustard = mock(Ingredient.class);
 
     @Test
     @DisplayName("В цену входят обе половины булочки и все ингредиенты")
     void priceIncludesBothBunHalvesAndEachIngredient() {
         Bun bun = mock(Bun.class);
         when(bun.getPrice()).thenReturn(10f);
+        when(cheese.getPrice()).thenReturn(3.5f);
+        when(mustard.getPrice()).thenReturn(2f);
         burger.setBuns(bun);
         burger.addIngredient(cheese);
         burger.addIngredient(mustard);
@@ -39,7 +41,7 @@ class BurgerTest {
     @Test
     @DisplayName("При переносе ингредиента остальные сохраняют порядок")
     void movingIngredientPreservesRelativeOrderOfOthers() {
-        Ingredient onion = new Ingredient(IngredientType.FILLING, "onion", 1f);
+        Ingredient onion = mock(Ingredient.class);
         burger.addIngredient(cheese);
         burger.addIngredient(mustard);
         burger.addIngredient(onion);
@@ -52,7 +54,17 @@ class BurgerTest {
     @Test
     @DisplayName("В чеке указаны булочка, ингредиенты по порядку и итоговая цена")
     void receiptListsBunIngredientsInOrderAndTotalPrice() {
-        burger.setBuns(new Bun("sesame", 4f));
+        Bun bun = mock(Bun.class);
+        when(bun.getName()).thenReturn("sesame");
+        when(bun.getPrice()).thenReturn(4f);
+        when(mustard.getType()).thenReturn(IngredientType.SAUCE);
+        when(mustard.getName()).thenReturn("mustard");
+        when(mustard.getPrice()).thenReturn(2f);
+        when(cheese.getType()).thenReturn(IngredientType.FILLING);
+        when(cheese.getName()).thenReturn("cheese");
+        when(cheese.getPrice()).thenReturn(3.5f);
+
+        burger.setBuns(bun);
         burger.addIngredient(mustard);
         burger.addIngredient(cheese);
 
