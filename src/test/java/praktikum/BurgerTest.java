@@ -1,0 +1,75 @@
+package praktikum;
+
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+class BurgerTest {
+    private final Burger burger = new Burger();
+    private final Ingredient cheese = mock(Ingredient.class);
+    private final Ingredient mustard = mock(Ingredient.class);
+
+    @Test
+    @DisplayName("В цену входят обе половины булочки и все ингредиенты")
+    void priceIncludesBothBunHalvesAndEachIngredient() {
+        Bun bun = mock(Bun.class);
+        when(bun.getPrice()).thenReturn(10f);
+        when(cheese.getPrice()).thenReturn(3.5f);
+        when(mustard.getPrice()).thenReturn(2f);
+        burger.setBuns(bun);
+        burger.addIngredient(cheese);
+        burger.addIngredient(mustard);
+
+        assertEquals(25.5f, burger.getPrice());
+    }
+
+    @Test
+    @DisplayName("Удаление по индексу сохраняет остальные ингредиенты")
+    void removingIngredientAtIndexKeepsOtherIngredients() {
+        burger.addIngredient(cheese);
+        burger.addIngredient(mustard);
+
+        burger.removeIngredient(1);
+
+        assertEquals(List.of(cheese), burger.ingredients);
+    }
+
+    @Test
+    @DisplayName("При переносе ингредиента остальные сохраняют порядок")
+    void movingIngredientPreservesRelativeOrderOfOthers() {
+        Ingredient onion = mock(Ingredient.class);
+        burger.addIngredient(cheese);
+        burger.addIngredient(mustard);
+        burger.addIngredient(onion);
+
+        burger.moveIngredient(0, 2);
+
+        assertEquals(List.of(mustard, onion, cheese), burger.ingredients);
+    }
+
+    @Test
+    @DisplayName("В чеке указаны булочка, ингредиенты по порядку и итоговая цена")
+    void receiptListsBunIngredientsInOrderAndTotalPrice() {
+        Bun bun = mock(Bun.class);
+        when(bun.getName()).thenReturn("sesame");
+        when(bun.getPrice()).thenReturn(4f);
+        when(mustard.getType()).thenReturn(IngredientType.SAUCE);
+        when(mustard.getName()).thenReturn("mustard");
+        when(mustard.getPrice()).thenReturn(2f);
+        when(cheese.getType()).thenReturn(IngredientType.FILLING);
+        when(cheese.getName()).thenReturn("cheese");
+        when(cheese.getPrice()).thenReturn(3.5f);
+
+        burger.setBuns(bun);
+        burger.addIngredient(mustard);
+        burger.addIngredient(cheese);
+
+        String expected = String.format("(==== sesame ====)%n= sauce mustard =%n= filling cheese =%n"
+                + "(==== sesame ====)%n%nPrice: %f%n", 13.5f);
+        assertEquals(expected, burger.getReceipt());
+    }
+}
